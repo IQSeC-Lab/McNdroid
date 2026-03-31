@@ -80,5 +80,19 @@ python data_feature_builder.py \
   --seed 42 \
   --stratify
 ```
+# GML Preparation Commands
 
+```bash
+python feature_builder.py initializer \
+  --year 2013 \
+  --out-dir /scratch/mkamol/datasets/init_2013 \
+  --workers 16
+```
+```bash
+python feature_builder.py adaptation \
+  --year 2014 \
+  --init-dir /scratch/mkamol/datasets/init_2013 \
+  --out-dir /scratch/mkamol/datasets/adapt_2014_from_2013 \
+  --workers 16
+```
 ---
