@@ -5,7 +5,7 @@
 ```bash
 python data_feature_builder.py \
   --mode initializer \
-  --data-root /scratch/mkamol/mcndroid/all_data/2013/ \
+  --data-root /scratch/mkamol/mcndroid/all_data/ \
   --year 2013 \
   --output-dir /scratch/mkamol/datasets/processed_data/2013 \
   --test-size 0.2 \
@@ -26,7 +26,7 @@ python data_feature_builder.py \
 ```bash
 python data_feature_builder.py \
   --mode initializer \
-  --data-root /scratch/mkamol/mcndroid/all_data/2013/ \
+  --data-root /scratch/mkamol/mcndroid/all_data/ \
   --year 2013 \
   --output-dir /scratch/mkamol/datasets/processed_data/2013 \
   --test-size 0.2 \
