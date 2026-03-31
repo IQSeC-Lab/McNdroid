@@ -33,7 +33,7 @@ python data_feature_builder.py \
   --seed 42 \
   --stratify \
   --use-variance-threshold \
-  --variance-threshold 0.0
+  --variance-threshold 0.001
 ```
 
 **Output:**
