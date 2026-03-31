@@ -83,13 +83,13 @@ python data_feature_builder.py \
 # GML Preparation Commands
 
 ```bash
-python feature_builder.py initializer \
+python gml_feature_builder.py initializer \
   --year 2013 \
   --out-dir /scratch/mkamol/datasets/init_2013 \
   --workers 16
 ```
 ```bash
-python feature_builder.py adaptation \
+python gml_feature_builder.py adaptation \
   --year 2014 \
   --init-dir /scratch/mkamol/datasets/init_2013 \
   --out-dir /scratch/mkamol/datasets/adapt_2014_from_2013 \
