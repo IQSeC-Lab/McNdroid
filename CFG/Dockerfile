@@ -10,5 +10,5 @@ WORKDIR /app
 RUN pip install androguard==3.3.5
 RUN pip install python-igraph==0.8.0
 # By default, when the container starts, it will be in the /app directory.
-
+COPY MaMadroid/ /app/
 
