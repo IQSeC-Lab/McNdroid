@@ -1,0 +1,647 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "dct": "http://purl.org/dc/terms/",
+    "conformsTo": "dct:conformsTo",
+    "citeAs": "cr:citeAs",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "source": "cr:source",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "extract": "cr:extract",
+    "column": "cr:column",
+    "fileProperty": "cr:fileProperty",
+    "transform": "cr:transform",
+    "regex": "cr:regex",
+    "includes": "cr:includes",
+    "containedIn": "cr:containedIn",
+    "key": "cr:key",
+    "references": "cr:references",
+    "repeated": "cr:repeated"
+  },
+  "@type": "sc:Dataset",
+  "name": "McNdroid",
+  "alternateName": "McNdroid: A Longitudinal Multimodal Benchmark for Robust Drift Detection in Android Malware",
+  "description": "McNdroid is a large-scale, longitudinal, multimodal Android malware detection dataset designed for concept-drift evaluation. It spans samples collected from 2013 to 2025 and provides three aligned modalities: static feature vectors, API call graph/GML features, and JSON-derived behavioral features. Rows across modalities are aligned by sample hash and binary label; the associated loader validates that data, GML, and JSON rows have identical hash order and identical labels before training.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid",
+  "datePublished": "2026-04-30",
+  "version": "1.0.0",
+  "citeAs": "[More Information Needed]",
+  "creator": [
+    {
+      "@type": "sc:Organization",
+      "name": "IQSeC Lab"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Md Mahmuduzzaman Kamol"
+    }
+  ],
+  "keywords": [
+    "cybersecurity",
+    "android",
+    "malware detection",
+    "concept drift",
+    "multimodal learning",
+    "longitudinal benchmark",
+    "GML",
+    "JSON features",
+    "static analysis",
+    "sparse features",
+    "SciPy sparse matrix",
+    "NumPy NPZ"
+  ],
+  "isLiveDataset": false,
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "metadata-csv",
+      "name": "metadata.csv",
+      "description": "Sample-level metadata including SHA256 hashes, collection timestamps, labels, and source information.",
+      "contentUrl": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid/resolve/main/metadata.csv",
+      "encodingFormat": "text/csv",
+      "sha256": "531ceabe9e5fa484de0e188580d049b0b598a5333f19b4abe62e242e9a2c9c8f"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "vendor-family-wide-verdict-csv",
+      "name": "vendor_family_wide_verdict.csv",
+      "description": "Multi-vendor malware family verdicts for label-noise, family attribution, and multi-label learning research.",
+      "contentUrl": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid/resolve/main/vendor_family_wide_verdict.csv",
+      "encodingFormat": "text/csv",
+      "sha256": "988e993101f9b6537551405361991a3d25c4554cb9ada52408ca21e404d8a4f7"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "data-train-feature-files",
+      "name": "data-train-feature-files",
+      "description": "Sparse SciPy NPZ feature matrices for the static data modality training split.",
+      "encodingFormat": "application/x-scipy-sparse-matrix",
+      "includes": "data_feature/processed_data/init_*/2013/train_X.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "data-train-meta-files",
+      "name": "data-train-meta-files",
+      "description": "NumPy NPZ metadata files for the static data modality training split. Each file contains arrays y and hash.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "data_feature/processed_data/init_*/2013/train_meta.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "data-test-feature-files",
+      "name": "data-test-feature-files",
+      "description": "Sparse SciPy NPZ feature matrices for yearly static data modality test splits.",
+      "encodingFormat": "application/x-scipy-sparse-matrix",
+      "includes": "data_feature/processed_data/init_*/*/test_X.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "data-test-meta-files",
+      "name": "data-test-meta-files",
+      "description": "NumPy NPZ metadata files for yearly static data modality test splits. Each file contains arrays y and hash.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "data_feature/processed_data/init_*/*/test_meta.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "gml-train-files",
+      "name": "gml-train-files",
+      "description": "Dense NumPy NPZ files for the GML/API call graph training split. Each file contains arrays X, y, and hash.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "gml_feature/processed_data/init_*/2013/train_X_y.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "gml-test-files",
+      "name": "gml-test-files",
+      "description": "Dense NumPy NPZ files for yearly GML/API call graph test splits. Each file contains arrays X, y, and hash.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "gml_feature/processed_data/init_*/*/test_X_y.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "json-train-feature-files",
+      "name": "json-train-feature-files",
+      "description": "Sparse SciPy NPZ feature matrices for the JSON modality training split. The JSON modality uses an additional nested year directory.",
+      "encodingFormat": "application/x-scipy-sparse-matrix",
+      "includes": "json_feature/processed_data/init_*/2013/2013/train_X.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "json-train-meta-files",
+      "name": "json-train-meta-files",
+      "description": "NumPy NPZ metadata files for the JSON modality training split. Each file contains arrays y and hashes.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "json_feature/processed_data/init_*/2013/2013/train_meta.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "json-test-feature-files",
+      "name": "json-test-feature-files",
+      "description": "Sparse SciPy NPZ feature matrices for yearly JSON modality test splits. The JSON modality uses an additional nested year directory.",
+      "encodingFormat": "application/x-scipy-sparse-matrix",
+      "includes": "json_feature/processed_data/init_*/*/*/test_X.npz"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "json-test-meta-files",
+      "name": "json-test-meta-files",
+      "description": "NumPy NPZ metadata files for yearly JSON modality test splits. Each file contains arrays y and hashes.",
+      "encodingFormat": "application/numpy-array",
+      "includes": "json_feature/processed_data/init_*/*/*/test_meta.npz"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "metadata",
+      "name": "metadata",
+      "description": "Sample-level metadata table.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "metadata/hash",
+          "name": "hash",
+          "description": "Hash identifier of the Android application sample.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "metadata-csv"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "vendor_family_wide_verdict",
+      "name": "vendor_family_wide_verdict",
+      "description": "Per-vendor family-level verdict table.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "vendor_family_wide_verdict/hash",
+          "name": "hash",
+          "description": "Hash identifier of the Android application sample.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "vendor-family-wide-verdict-csv"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "data_train_features",
+      "name": "data_train_features",
+      "description": "Training feature records for the static data modality. Features are stored in train_X.npz as a SciPy sparse matrix.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "data_train_features/features",
+          "name": "features",
+          "description": "Sparse static feature vector for one training sample. Loaded from train_X.npz.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "data-train-feature-files"
+            },
+            "extract": {
+              "fileProperty": "content"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "data_train_metadata",
+      "name": "data_train_metadata",
+      "description": "Training metadata records for the static data modality. Labels and hashes are stored in train_meta.npz.",
+      "key": {
+        "@id": "data_train_metadata/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "data_train_metadata/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from train_meta.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "data-train-meta-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "data_train_metadata/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from train_meta.npz array hash.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "data-train-meta-files"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "data_test_features",
+      "name": "data_test_features",
+      "description": "Yearly test feature records for the static data modality. Features are stored in test_X.npz.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "data_test_features/features",
+          "name": "features",
+          "description": "Sparse static feature vector for one test sample. Loaded from test_X.npz.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "data-test-feature-files"
+            },
+            "extract": {
+              "fileProperty": "content"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "data_test_features/test_year",
+          "name": "test_year",
+          "description": "Test year inferred from the path data_feature/processed_data/init_<train_year>/<test_year>/test_X.npz.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "data-test-feature-files"
+            },
+            "extract": {
+              "fileProperty": "fullpath"
+            },
+            "transform": {
+              "regex": "data_feature/processed_data/init_\\d+/(\\d+)/test_X\\.npz$"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "data_test_metadata",
+      "name": "data_test_metadata",
+      "description": "Yearly test metadata records for the static data modality. Labels and hashes are stored in test_meta.npz.",
+      "key": {
+        "@id": "data_test_metadata/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "data_test_metadata/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from test_meta.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "data-test-meta-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "data_test_metadata/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from test_meta.npz array hash.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "data-test-meta-files"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "gml_train",
+      "name": "gml_train",
+      "description": "Training records for the GML/API call graph modality. Each train_X_y.npz file contains arrays X, y, and hash.",
+      "key": {
+        "@id": "gml_train/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "gml_train/features",
+          "name": "features",
+          "description": "Dense GML feature vector for one training sample. Loaded from train_X_y.npz array X.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "gml-train-files"
+            },
+            "extract": {
+              "column": "X"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gml_train/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from train_X_y.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "gml-train-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gml_train/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from train_X_y.npz array hash.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "gml-train-files"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "gml_test",
+      "name": "gml_test",
+      "description": "Yearly test records for the GML/API call graph modality. Each test_X_y.npz file contains arrays X, y, and hash.",
+      "key": {
+        "@id": "gml_test/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "gml_test/features",
+          "name": "features",
+          "description": "Dense GML feature vector for one test sample. Loaded from test_X_y.npz array X.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "gml-test-files"
+            },
+            "extract": {
+              "column": "X"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gml_test/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from test_X_y.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "gml-test-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gml_test/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from test_X_y.npz array hash.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "gml-test-files"
+            },
+            "extract": {
+              "column": "hash"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "gml_test/test_year",
+          "name": "test_year",
+          "description": "Test year inferred from the path gml_feature/processed_data/init_<train_year>/<test_year>/test_X_y.npz.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "gml-test-files"
+            },
+            "extract": {
+              "fileProperty": "fullpath"
+            },
+            "transform": {
+              "regex": "gml_feature/processed_data/init_\\d+/(\\d+)/test_X_y\\.npz$"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "json_train_features",
+      "name": "json_train_features",
+      "description": "Training feature records for the JSON modality. Features are stored in train_X.npz as a SciPy sparse matrix.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "json_train_features/features",
+          "name": "features",
+          "description": "Sparse JSON-derived feature vector for one training sample. Loaded from train_X.npz.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "json-train-feature-files"
+            },
+            "extract": {
+              "fileProperty": "content"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "json_train_metadata",
+      "name": "json_train_metadata",
+      "description": "Training metadata records for the JSON modality. Labels and hashes are stored in train_meta.npz. The metadata hash key is hashes, not hash.",
+      "key": {
+        "@id": "json_train_metadata/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "json_train_metadata/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from train_meta.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "json-train-meta-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "json_train_metadata/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from train_meta.npz array hashes.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "json-train-meta-files"
+            },
+            "extract": {
+              "column": "hashes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "json_test_features",
+      "name": "json_test_features",
+      "description": "Yearly test feature records for the JSON modality. Features are stored in test_X.npz.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "json_test_features/features",
+          "name": "features",
+          "description": "Sparse JSON-derived feature vector for one test sample. Loaded from test_X.npz.",
+          "dataType": "cr:Float32",
+          "repeated": true,
+          "source": {
+            "fileSet": {
+              "@id": "json-test-feature-files"
+            },
+            "extract": {
+              "fileProperty": "content"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "json_test_features/test_year",
+          "name": "test_year",
+          "description": "Test year inferred from the path json_feature/processed_data/init_<train_year>/<test_year>/<test_year>/test_X.npz.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "json-test-feature-files"
+            },
+            "extract": {
+              "fileProperty": "fullpath"
+            },
+            "transform": {
+              "regex": "json_feature/processed_data/init_\\d+/(\\d+)/\\d+/test_X\\.npz$"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "json_test_metadata",
+      "name": "json_test_metadata",
+      "description": "Yearly test metadata records for the JSON modality. Labels and hashes are stored in test_meta.npz. The metadata hash key is hashes, not hash.",
+      "key": {
+        "@id": "json_test_metadata/hash"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "json_test_metadata/label",
+          "name": "label",
+          "description": "Binary class label. Loaded from test_meta.npz array y.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileSet": {
+              "@id": "json-test-meta-files"
+            },
+            "extract": {
+              "column": "y"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "json_test_metadata/hash",
+          "name": "hash",
+          "description": "Sample hash identifier. Loaded from test_meta.npz array hashes.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "json-test-meta-files"
+            },
+            "extract": {
+              "column": "hashes"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
