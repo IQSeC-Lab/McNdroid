@@ -58,9 +58,7 @@ Outputs:
         data/
           None/
           Joint/
-          ER-1000/
-          ER-2000/
-          ER-5000/
+          ER
         gml/
         json/
         fusion/
