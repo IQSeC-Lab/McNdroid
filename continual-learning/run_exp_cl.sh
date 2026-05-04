@@ -7,11 +7,11 @@ nohup python -u mcndroid_cl_domain.py \
   --start_year 2013 \
   --end_year 2025 \
   --skip_years 2015 \
-  --modalities json,fusion \
-  --protocols replay \
+  --modalities data,gml,json,fusion \
+  --protocols none,joint,replay \
   --epochs 20 \
   --batch_size 512 \
-  --buffer_size 2000 \
+  --buffer_size 1000 \
   --lr 0.001 \
   --seed 544 \
-  --verbose > cl_domain_json_fusion_replay.log 2>&1 &
+  --verbose > cl_domain.log 2>&1 &
