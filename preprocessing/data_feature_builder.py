@@ -49,13 +49,18 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--vocab-path", default=None)
     parser.add_argument("--selector-meta-path", default=None)
+    parser.add_argument(
+        "--split-manifest-path",
+        default=None,
+        help="Optional shared split manifest JSON. If provided, train/test rows are taken from this manifest instead of random splitting.",
+    )
 
     parser.add_argument("--test-size", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--stratify", action="store_true")
 
     parser.add_argument("--use-variance-threshold", action="store_true")
-    parser.add_argument("--variance-threshold", type=float, default=0.0)
+    parser.add_argument("--variance-threshold", type=float, default=0.001)
 
     parser.add_argument("--n-jobs", type=int, default=35)
 
@@ -150,6 +155,79 @@ def simple_split(
     return train_idx, test_idx
 
 
+def load_json(path: str | Path):
+    with Path(path).open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_split_manifest(split_manifest_path: str | Path) -> Tuple[List[str], List[str], Dict[str, int]]:
+    manifest = load_json(split_manifest_path)
+
+    train_items = manifest.get("train", [])
+    test_items = manifest.get("test", [])
+    if not train_items or not test_items:
+        raise ValueError("Split manifest must contain non-empty 'train' and 'test' lists.")
+
+    train_hashes = [item["hash"] for item in train_items]
+    test_hashes = [item["hash"] for item in test_items]
+
+    label_by_hash: Dict[str, int] = {}
+    for item in train_items + test_items:
+        h = item["hash"]
+        y = int(item["y"])
+        old = label_by_hash.get(h)
+        if old is not None and old != y:
+            raise ValueError(f"Conflicting labels in split manifest for hash={h}: {old} vs {y}")
+        label_by_hash[h] = y
+
+    if len(set(train_hashes) & set(test_hashes)) != 0:
+        raise ValueError("Split manifest is invalid: overlap detected between train and test hashes.")
+
+    return train_hashes, test_hashes, label_by_hash
+
+
+def split_indices_from_manifest(
+    hashes: np.ndarray,
+    labels: np.ndarray,
+    split_manifest_path: str | Path,
+) -> Tuple[np.ndarray, np.ndarray]:
+    train_hashes, test_hashes, label_by_hash = load_split_manifest(split_manifest_path)
+
+    idx_by_hash = {str(h): i for i, h in enumerate(hashes.tolist())}
+
+    missing_train = [h for h in train_hashes if h not in idx_by_hash]
+    missing_test = [h for h in test_hashes if h not in idx_by_hash]
+    if missing_train or missing_test:
+        msg = (
+            f"Split manifest contains hashes missing from this dataset. "
+            f"missing_train={len(missing_train)}, missing_test={len(missing_test)}"
+        )
+        if missing_train:
+            msg += f"\nFirst missing train hashes: {missing_train[:10]}"
+        if missing_test:
+            msg += f"\nFirst missing test hashes: {missing_test[:10]}"
+        raise ValueError(msg)
+
+    tr = np.asarray([idx_by_hash[h] for h in train_hashes], dtype=np.int64)
+    te = np.asarray([idx_by_hash[h] for h in test_hashes], dtype=np.int64)
+
+    for split_name, split_hashes, split_idx in (("train", train_hashes, tr), ("test", test_hashes, te)):
+        for expected_hash, idx in zip(split_hashes, split_idx):
+            actual_hash = str(hashes[idx])
+            actual_label = int(labels[idx])
+            expected_label = int(label_by_hash[expected_hash])
+            if actual_hash != expected_hash:
+                raise ValueError(
+                    f"Row ordering error for {split_name}: expected hash {expected_hash}, got {actual_hash}"
+                )
+            if actual_label != expected_label:
+                raise ValueError(
+                    f"Label mismatch for hash={expected_hash}: dataset={actual_label}, manifest={expected_label}"
+                )
+
+    return tr, te
+
+
 def build_vocab(train_feats: List[List[str]]) -> Dict[str, int]:
     vocab = sorted(set(f for feats in train_feats for f in feats))
     return {f: i for i, f in enumerate(vocab)}
@@ -227,11 +305,6 @@ def save_json(obj, path: Path) -> None:
         json.dump(obj, f, indent=2)
 
 
-def load_json(path: str | Path):
-    with Path(path).open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 def print_dataset_summary(
     mode: str,
     year: int,
@@ -276,8 +349,8 @@ def print_dataset_summary(
 
 
 def run_initializer(args: argparse.Namespace) -> None:
-    if args.year != 2013:
-        raise ValueError("Initializer must use year 2013")
+    # if args.year != 2013:
+    #     raise ValueError("Initializer must use year 2013")
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -286,7 +359,11 @@ def run_initializer(args: argparse.Namespace) -> None:
         Path(args.data_root), args.year, args.n_jobs
     )
 
-    tr, te = simple_split(len(feats), y, args.test_size, args.seed, args.stratify)
+    if args.split_manifest_path:
+        print(f"[INFO] Using shared split manifest: {args.split_manifest_path}")
+        tr, te = split_indices_from_manifest(h, y, args.split_manifest_path)
+    else:
+        tr, te = simple_split(len(feats), y, args.test_size, args.seed, args.stratify)
 
     feats_tr = [feats[i] for i in tr]
     feats_te = [feats[i] for i in te]
@@ -313,7 +390,16 @@ def run_initializer(args: argparse.Namespace) -> None:
         vocab_after_vt = int(X_tr.shape[1])
         save_json(vt_meta, out / "selector_meta.json")
 
+    split_meta = {
+        "year": int(args.year),
+        "mode": "initializer",
+        "split_source": args.split_manifest_path or "random_split",
+        "train_size": int(len(tr)),
+        "test_size": int(len(te)),
+    }
+
     save_json({"vocab": vocab}, out / "vocab.json")
+    save_json(split_meta, out / "split_meta.json")
 
     save_sparse_and_meta(
         out / "train_X.npz",
@@ -365,7 +451,11 @@ def run_adaptation(args: argparse.Namespace) -> None:
         Path(args.data_root), args.year, args.n_jobs
     )
 
-    tr, te = simple_split(len(feats), y, args.test_size, args.seed, args.stratify)
+    if args.split_manifest_path:
+        print(f"[INFO] Using shared split manifest: {args.split_manifest_path}")
+        tr, te = split_indices_from_manifest(h, y, args.split_manifest_path)
+    else:
+        tr, te = simple_split(len(feats), y, args.test_size, args.seed, args.stratify)
 
     feats_tr = [feats[i] for i in tr]
     feats_te = [feats[i] for i in te]
@@ -383,6 +473,15 @@ def run_adaptation(args: argparse.Namespace) -> None:
     X_te = apply_vt(X_te, vt_meta)
 
     vocab_after_vt = int(X_tr.shape[1])
+
+    split_meta = {
+        "year": int(args.year),
+        "mode": "adaptation",
+        "split_source": args.split_manifest_path or "random_split",
+        "train_size": int(len(tr)),
+        "test_size": int(len(te)),
+    }
+    save_json(split_meta, out / "split_meta.json")
 
     save_sparse_and_meta(
         out / "train_X.npz",
@@ -429,3 +528,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
