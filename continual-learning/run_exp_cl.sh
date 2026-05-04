@@ -1,0 +1,17 @@
+nohup python -u mcndroid_cl_domain.py \
+  --data_root ./McNdroid/data_feature/processed_data \
+  --gml_root ./McNdroid/gml_feature/processed_data \
+  --json_root ./McNdroid/json_feature/processed_data \
+  --save_dir ./continual_domain_results \
+  --init_year 2013 \
+  --start_year 2013 \
+  --end_year 2025 \
+  --skip_years 2015 \
+  --modalities json,fusion \
+  --protocols replay \
+  --epochs 20 \
+  --batch_size 512 \
+  --buffer_size 2000 \
+  --lr 0.001 \
+  --seed 544 \
+  --verbose > cl_domain_json_fusion_replay.log 2>&1 &
