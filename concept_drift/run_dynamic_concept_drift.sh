@@ -28,7 +28,7 @@ if [[ "$FOUND" -eq 0 ]]; then
   exit 1
 fi
 
-SCRIPT="/home/shared-datasets/McNdroid/classifier-mmk.py"
+SCRIPT="/home/shared-datasets/McNdroid/unimodal_all_model.py"
 BASE_DATA_DIR="/home/shared-datasets/McNdroid/json_feature/processed_data"
 DATA_DIR="${BASE_DATA_DIR}/init_${TRAIN_YEAR}"
 
