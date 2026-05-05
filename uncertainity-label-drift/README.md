@@ -16,7 +16,7 @@ python drift_pipeline_b2m.py \
 
 --- 
 
-## 3. Merge Drift Data — merge_drift_data.py
+## 2. Merge Drift Data — merge_drift_data.py
 
 ```bash
 python merge_drift_data.py \
@@ -31,7 +31,7 @@ python merge_drift_data.py \
 
 ---
 
-## 4. Drift vs. Undrift Uncertainty Experiment
+## 3. Drift vs. Undrift Uncertainty Experiment
 
 ```bash
 python run_drift_experiment.py
