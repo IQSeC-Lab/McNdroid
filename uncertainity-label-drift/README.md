@@ -7,7 +7,7 @@ python drift_pipeline_b2m.py \
   --drift_data_root ./drift_data \
   --b2m ./label-drift/benign_to_malware.csv \
   --m2b ./label-drift/malware_to_benign.csv \
-  --output_dir /home/erivas6/2026NeurIPS/drifted_results
+  --output_dir /home/<user>/2026NeurIPS/drifted_results
 ```
 
 **Output:**
