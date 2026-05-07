@@ -1,19 +1,3 @@
-
-"""
-Month-wise split helpers for McNdroid/LAMDA-style pipelines.
-
-What this does
---------------
-1. Reads final_hash_date_label_family.csv
-2. Splits it into one CSV per month: YYYY-MM.csv
-3. Builds a hash -> month map
-4. Provides a generic helper to split already-loaded modality arrays
-   (X, y, hashes) into month buckets
-
-This is the safest way to move from year-wise evaluation to month-wise evaluation
-without assuming all months exist.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
