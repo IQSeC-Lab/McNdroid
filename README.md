@@ -6,7 +6,7 @@
 
 ## Dataset Description
 
-McNdroid is a large-scale, longitudinal, multimodal Android malware detection dataset designed to benchmark concept drift robustness. It spans samples collected from 2013 to 2025 and provides three complementary modalities: static feature vectors, API call graphs (GML), and JSON-based behavioral representations. The dataset also includes a rich metadata CSV and per-vendor family-level verdicts, supporting fine-grained label analysis and multi-label learning.
+McNdroid is a large-scale, longitudinal, multimodal Android malware detection dataset designed to benchmark concept drift robustness. It spans samples collected from 2013 to 2025 and provides three complementary modalities: static feature, API call graphs, and dynamic behavioral representations. The dataset also includes a rich metadata CSV and per-vendor family-level verdicts, supporting fine-grained label analysis and multi-label learning.
 
 ### Dataset Summary
 
