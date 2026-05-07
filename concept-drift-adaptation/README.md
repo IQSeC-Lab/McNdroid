@@ -1,13 +1,5 @@
-# McNdroid — CADE Budget Adaptation (Monthwise)
-
-This repository contains the code for **McNdroid**, an Android malware detection system based on a **Contrastive Autoencoder (CADE)** with budget-constrained continual adaptation. The model is trained on features from 2013 and evaluated month-by-month across test years (2014–2025), simulating a realistic deployment scenario where only a limited number of new samples can be labelled per month (the *budget*).
-
----
 
 ## Table of Contents
-
-- [Overview](#overview)
-- [Project Structure](#project-structure)
 - [Requirements](#requirements)
 - [Setup](#setup)
 - [Data Layout](#data-layout)
@@ -21,14 +13,11 @@ This repository contains the code for **McNdroid**, an Android malware detection
   - [Graph Modality](#graph-modality)
   - [Dynamic Modality](#dynamic-modality)
   - [All (Fusion) Modality](#all-fusion-modality)
-  - [Running with SLURM](#running-with-slurm)
 - [Step 3 — Run Chen et al. (2023) Adaptation](#step-3--run-chen-et-al-2023-adaptation)
   - [Static Modality (Chen)](#static-modality-chen)
   - [Graph Modality (Chen)](#graph-modality-chen)
   - [Dynamic Modality (Chen)](#dynamic-modality-chen)
   - [All (Fusion) Modality (Chen)](#all-fusion-modality-chen)
-  - [Running with SLURM (Chen)](#running-with-slurm-chen)
-- [Arguments Reference](#arguments-reference)
 - [Output Structure](#output-structure)
 - [Modalities](#modalities)
 
@@ -59,9 +48,7 @@ Mcndroid/
 ├── mcndroid_monthwise_split_and_loader.py         # Step 1: data preparation
 ├── mcndroid_cade_budget_adaptation_monthwise.py   # Step 2: CADE training & adaptation
 ├── mcndroid_chen_budget_adaptation_monthwise.py   # Step 3: Chen et al. (2023) baseline
-├── graph.slurm                                    # SLURM job array script (CADE, graph modality)
-├── chen_combined.slurm                            # SLURM job array script (Chen, all modality)
-├── final_hash_date_label_family.csv               # Master metadata CSV (you provide this)
+├── final_hash_date_label_family.csv               # Master metadata CSV 
 ├── data-features/init_2013/<year>/                # Static features (.npz)
 ├── gml-features/init_2013/<year>/                 # Graph features (.npz)
 ├── json-features/init_2013/<year>/                # Dynamic features (.npz)
@@ -148,7 +135,7 @@ data-features/init_2013/
 ```
 gml-features/init_2013/
 └── <year>/
-    ├── train_X_y.npz     # Dense feature matrix with labels (X, y) and hashes
+    ├── train_X_y.npz     
     └── test_X_y.npz
 ```
 
@@ -171,7 +158,7 @@ Requires all three feature sets above to be present simultaneously. Samples are 
 
 ## Step 1 — Prepare Monthwise Data
 
-> **This step must be completed before running the CADE script.** The CADE script reads the per-month CSV files produced here to know which APK hashes belong to each calendar month.
+> **This step must be completed before running the next two steps** 
 
 ### What the data loader does
 
@@ -494,31 +481,12 @@ python3 -u mcndroid_cade_budget_adaptation_monthwise.py \
 
 ---
 
-### Running with SLURM
 
-If you have access to a SLURM cluster, the provided `graph.slurm` runs all 3 graph modality seeds as a job array (2 at a time). To run all four modalities, create one `.slurm` file per modality by changing the `--modality` flag and the job name. Example submission:
-
-```bash
-sbatch graph.slurm
-sbatch static.slurm
-sbatch dynamic.slurm
-sbatch all.slurm
-```
-
-The array maps `SLURM_ARRAY_TASK_ID` → seeds `[42, 123, 999]` and run IDs `[run1, run2, run3]`.
-
-> **Important:** Run the data loader (Step 1) before submitting any SLURM jobs. The loader only needs to be run once — all four modality jobs read the same monthwise CSV files.
-
----
 
 ## Step 3 — Run Chen et al. (2023) Adaptation
 
 This step runs the **Chen et al. (USENIX Security 2023)** Hierarchical Contrastive Learning baseline on the same monthwise setup, using the same budgets and seeds as Step 2. It reads the same monthwise CSV files produced in Step 1, so **Step 1 must be completed first**.
 
-The Chen method differs from CADE in three key ways:
-- Uses a **Hierarchical Contrastive Loss** that distinguishes malware at the family level (same family → strongly pulled together, different family → weakly pulled together, benign/malware → pushed apart).
-- Uses **Pseudo Loss** (uncertainty score based on k-nearest neighbour distances in latent space) instead of MAD-based anomaly scores for sample selection.
-- Uses **warm-start retraining** — the model continues from its previous weights each month rather than fine-tuning a separate encoder.
 
 All training hyperparameters (epochs, learning rate, batch size, etc.) are fixed per the paper and do not need to be passed on the command line.
 
@@ -630,7 +598,7 @@ python3 -u mcndroid_chen_budget_adaptation_monthwise.py \
 
 ### All (Fusion) Modality (Chen)
 
-> **Note:** The `all` modality requires static, graph, and dynamic feature files to all be present and hash-aligned. This is the modality used in the provided `chen_combined.slurm`. It is more memory-intensive; 160 GB RAM is recommended on a cluster.
+> **Note:** The `all` modality requires static, graph, and dynamic feature files to all be present and hash-aligned. It is more memory-intensive; 160 GB RAM is recommended.
 
 **Run 1 — seed 42:**
 ```bash
@@ -662,67 +630,10 @@ python3 -u mcndroid_chen_budget_adaptation_monthwise.py \
   --run_id run3
 ```
 
----
 
-### Running with SLURM (Chen)
 
-The provided `chen_combined.slurm` runs all 3 seeds for the `all` (fusion) modality as a job array (2 at a time):
 
-```bash
-sbatch chen_combined.slurm
-```
 
-To run other modalities on SLURM, copy `chen_combined.slurm`, change `--modality all` to the desired modality, and update the job name and log paths accordingly.
-
----
-
-## Arguments Reference
-
-### CADE script (`mcndroid_cade_budget_adaptation_monthwise.py`)
-
-| Argument | Default | Description |
-|---|---|---|
-| `--modality` | *(required)* | Feature modality: `static`, `graph`, `dynamic`, or `all` |
-| `--budgets` | `50,100,200,400` | Comma-separated list of labelling budgets to evaluate |
-| `--device` | auto-detect | PyTorch device, e.g. `cuda:0` or `cpu` |
-| `--seed` | `42` | Random seed for reproducibility |
-| `--run_id` | `run1` | Label for this run, used in output filenames |
-| `--min_epochs` | `150` | Minimum training epochs before early stopping is allowed |
-| `--max_epochs` | `250` | Maximum training epochs |
-| `--patience` | `10` | Early stopping patience (epochs without improvement) |
-| `--min_delta` | `1e-4` | Minimum improvement to reset the early stopping counter |
-| `--clf_epochs` | `15` | Epochs to train the latent classifier |
-| `--finetune_epochs` | `3` | Epochs to fine-tune the CADE on each month's adaptation set |
-| `--finetune_lr` | `1e-4` | Learning rate for fine-tuning |
-| `--selection_policy` | `balanced_drift_topk` | Sample selection: `balanced_drift_topk`, `drift_topk`, or `random` |
-
-### Chen script (`mcndroid_chen_budget_adaptation_monthwise.py`)
-
-All model hyperparameters (encoder architecture, learning rate, batch size, epochs) are fixed per the paper and do not need to be passed on the command line.
-
-| Argument | Default | Description |
-|---|---|---|
-| `--modality` | *(required)* | Feature modality: `static`, `graph`, `dynamic`, or `all` |
-| `--budgets` | `50,100,200,400` | Comma-separated list of labelling budgets to evaluate |
-| `--device` | auto-detect | PyTorch device, e.g. `cuda:0` or `cpu` |
-| `--seed` | `42` | Random seed for reproducibility |
-| `--run_id` | `run1` | Label for this run, used in output filenames |
-
-### Fixed Chen hyperparameters (all modalities)
-
-| Hyperparameter | Value | Description |
-|---|---|---|
-| Encoder hidden dims | `[512, 384, 256]` | FC layers before 128-dim latent |
-| Latent dim | `128` | Embedding space size |
-| Classifier hidden | `[100, 100]` | MLP head on top of encoder |
-| Batch size | `1024` | Larger batches produce more contrastive pairs |
-| Learning rate | `0.001` | Initial LR, decayed by 0.95 every 10 epochs |
-| Initial epochs | `250` | Epochs for full training on 2013 data |
-| Warm-start epochs | `100` | Epochs for monthly retraining |
-| Warm LR ratio | `0.05` | LR for warm retraining = `lr × 0.05` |
-| Pseudo loss k | `29` | Nearest neighbours for uncertainty scoring |
-
----
 
 ## Output Structure
 
@@ -777,11 +688,4 @@ Each **Chen result JSON** contains the same structure, plus:
 
 ---
 
-## Modalities
 
-| Modality | Feature source | Autoencoder hidden dims | Latent dim | Scaler |
-|---|---|---|---|---|
-| `static` | Static analysis (permissions, API calls, etc.) — sparse | `[1024, 512, 256]` | 64 | MaxAbsScaler |
-| `graph` | Graph-based features (call graph embeddings) — dense | `[1024, 512, 256]` | 64 | StandardScaler |
-| `dynamic` | Dynamic analysis (runtime behaviour) — sparse | `[2048, 1024, 512]` | 128 | MaxAbsScaler |
-| `all` | Concatenation of static + graph + dynamic, hash-aligned | `[4096, 2048, 1024]` | 256 | Per-modality, then concat |
