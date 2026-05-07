@@ -74,14 +74,6 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install numpy pandas scipy scikit-learn
 ```
 
-Or if you have a `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
 ## Setup
 
 ```bash
