@@ -1,5 +1,7 @@
 
 ## Table of Contents
+- [Overview](#overview)
+- [Project Structure](#project-structure)
 - [Requirements](#requirements)
 - [Setup](#setup)
 - [Data Layout](#data-layout)
