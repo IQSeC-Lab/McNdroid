@@ -66,12 +66,6 @@ Contains per-sample metadata including SHA256 hashes, collection timestamps, lab
 
 Contains malware family labels from multiple antivirus vendors, enabling multi-label and label-noise research.
 
-## Dataset Creation
-
-### Source Data
-
-Samples were collected from public malware repositories and benign application stores spanning 2013–2025. Each sample was processed through a static analysis pipeline to extract permissions, API calls, intents, and other manifest and bytecode-level features.
-
 ### Annotations
 
 Labels are derived from VirusTotal multi-scanner verdicts. The `vendor_family_wide_verdict.csv` file preserves per-vendor family attributions to support research on label noise and disagreement.
