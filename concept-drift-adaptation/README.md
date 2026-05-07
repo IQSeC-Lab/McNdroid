@@ -49,7 +49,7 @@ Results are reported across three temporal regimes — **IID** (2014), **Near** 
 Mcndroid/
 ├── mcndroid_monthwise_split_and_loader.py         # Step 1: data preparation
 ├── mcndroid_cade_budget_adaptation_monthwise.py   # Step 2: CADE training & adaptation
-├── mcndroid_chen_budget_adaptation_monthwise.py   # Step 3: Chen et al. (2023) baseline
+├── mcndroid_chen_budget_adaptation_monthwise.py   # Step 3: Chen et al. (2023) 
 ├── final_hash_date_label_family.csv               # Master metadata CSV 
 ├── data-features/init_2013/<year>/                # Static features (.npz)
 ├── gml-features/init_2013/<year>/                 # Graph features (.npz)
@@ -73,14 +73,6 @@ Install dependencies:
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install numpy pandas scipy scikit-learn
 ```
-
-Or if you have a `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
----
 
 ## Setup
 
@@ -109,7 +101,7 @@ The scripts expect data to be placed under the following paths relative to the s
 ### Master metadata CSV (required for Step 1)
 
 ```
-final_hash_date_label_family.csv
+final_hash_date_label_family.csv (https://zenodo.org/records/19969833 -> Download metadata.csv)
 ```
 
 Must contain these columns:
