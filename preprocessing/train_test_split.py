@@ -1,35 +1,4 @@
 #!/usr/bin/env python3
-"""
-Build one shared train/test split manifest so multiple feature builders use the
-exact same APK set and row partition.
-
-Supported modalities
---------------------
-1. GML JSONL builder layout:
-   <gml-root>/<year>/0/**/*.jsonl
-   <gml-root>/<year>/1/**/*.jsonl
-
-2. Drebin .data builder layout:
-   <data-root>/<year>/0/*.data
-   <data-root>/<year>/1/*.data
-
-3. JSON telemetry builder layout:
-   <json-root>/<year>/0/**/*.json
-   <json-root>/<year>/1/**/*.json
-
-Output
-------
-A JSON file like:
-{
-  "year": "2013",
-  "seed": 42,
-  "test_size": 0.2,
-  "train": [{"hash": "...", "y": 0}, ...],
-  "test":  [{"hash": "...", "y": 1}, ...],
-  "counts": {...}
-}
-"""
-
 from __future__ import annotations
 
 import argparse
