@@ -9,6 +9,6 @@ Expected folder structure:
 
 | Modality | Input root | Output directory |
 |---|---|---|
-| `gml` | `gml_feature/processed_data/init_2013` | `results/drift_analysis_gml` |
-| `json` | `json_feature/processed_data/init_2013` | `results/drift_analysis_json` |
-| `data` | `data_feature/processed_data/init_2013` | `results/drift_analysis_data` |
+| `graph` | `gml_feature/processed_data/init_2013` | `results/drift_analysis_gml` |
+| `dynamic` | `json_feature/processed_data/init_2013` | `results/drift_analysis_json` |
+| `static` | `data_feature/processed_data/init_2013` | `results/drift_analysis_data` |
