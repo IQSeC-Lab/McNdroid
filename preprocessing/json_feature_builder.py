@@ -1,19 +1,4 @@
 #!/usr/bin/env python3
-"""
-Refined frozen feature-space builder for Android telemetry JSON datasets.
-
-Key refinements
----------------
-- Uses shared train/test split manifests in both initializer and adaptation.
-- Removes the residual explicit-feature hashing mechanism completely.
-- Freezes one explicit vocabulary from the initializer train split only.
-- Ignores unseen explicit features after freezing.
-- Normalizes component actions before adding them to the explicit vocabulary.
-- Keeps only coarse, stable component-action semantics as explicit features.
-- Pushes normalized open-vocabulary component/action payload evidence into hashed channels.
-- Drops raw payload-heavy values from the explicit vocabulary.
-"""
-
 from __future__ import annotations
 
 import argparse
