@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-Malware Feature-Space Drift Pipeline (Year-Only / Unlabeled)
-============================================================
-Pipeline:
-    original features -> MLP -> 128D latent -> PCA(50) -> UMAP(2D)
-
-Behavior:
-- Train MLP on reference year (default: 2013)
-- Extract penultimate-layer 128D latent embeddings
-- Fit PCA(50) on 2013 train 128D embeddings
-- Fit UMAP(2D) on 2013 PCA-reduced train embeddings
-- Project 2013 test and future-year test sets through the same PCA(50)->UMAP(2D) mapping
-- Produce UMAP-only year plots and year overlays
-
-Notes:
-- Labels are still loaded because the MLP training remains supervised.
-- Labels are not used for sampling, plotting, or year-drift visualization.
-- There is no PCA visualization branch in this file.
-- There are no centroid markers or centroid-distance summaries in this file.
-"""
-
 from __future__ import annotations
 
 import argparse
