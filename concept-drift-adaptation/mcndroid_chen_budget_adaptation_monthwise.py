@@ -1,35 +1,3 @@
-"""
-mcndroid_chen_budget_adaptation_monthwise.py
-============================================
-Implements Chen et al. (2023) "Continuous Learning for Android Malware Detection"
-(USENIX Security 2023) on the McNdroid dataset with monthwise adaptation.
-
-Key components from Chen et al.:
-  1. Hierarchical Contrastive Learning encoder (enc: 512-384-256-128, latent=128)
-  2. MLP Classifier on top of encoder (100-100 → softmax)
-  3. Pseudo Loss sample selector (uncertainty score for contrastive models)
-  4. Warm start retraining (model continues from previous weights each month)
-  5. Monthly cycle: select budget samples → expand training set → warm retrain → evaluate
-
-Evaluation:
-  - Train on 2013, adapt monthly from 2014 onward
-  - IID: 2014, NEAR: 2016-2017, FAR: 2018-2025
-  - Budgets: 50, 100, 200, 400
-  - Metrics: F1, FNR, FPR
-
-Paths (relative to script location, ~/work/Nowmi/Mcndroid/):
-  Static:  data-features/init_2013/YEAR/
-  Graph:   gml-features/init_2013/YEAR/
-  Dynamic: json-features/init_2013/YEAR/YEAR/
-  Monthwise CSVs: monthwise_data/data/monthwise_csv/YEAR/YYYY-MM.csv
-
-Usage:
-    python3 -u mcndroid_chen_budget_adaptation_monthwise.py --modality static --budgets 50,100,200,400
-    python3 -u mcndroid_chen_budget_adaptation_monthwise.py --modality graph  --budgets 50,100,200,400
-    python3 -u mcndroid_chen_budget_adaptation_monthwise.py --modality dynamic --budgets 50,100,200,400
-    python3 -u mcndroid_chen_budget_adaptation_monthwise.py --modality all    --budgets 50,100,200,400
-"""
-
 from __future__ import annotations
 
 import argparse
