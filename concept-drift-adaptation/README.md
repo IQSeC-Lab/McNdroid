@@ -109,7 +109,7 @@ The scripts expect data to be placed under the following paths relative to the s
 ### Master metadata CSV (required for Step 1)
 
 ```
-final_hash_date_label_family.csv
+final_hash_date_label_family.csv (https://zenodo.org/records/19969833 -> Download metadata.csv)
 ```
 
 Must contain these columns:
