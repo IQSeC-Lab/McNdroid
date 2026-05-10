@@ -70,28 +70,48 @@ Multimodal concept drift analysis with attention-based fusion mechanisms. Uses c
 ```bash
 python multimodal_CA.py \
   --data-root /path/to/data_feature/processed_data/init_2013 \
-  --gml-root /path/to/data_feature/processed_gml/init_2013 \
-  --json-root /path/to/data_feature/processed_json/init_2013 \
+  --gml-root /path/to/gml_feature/processed_gml/init_2013 \
+  --json-root /path/to/json_feature/processed_json/init_2013 \
   --train-year 2013 \
   --test-start-year 2013 \
   --test-end-year 2025 \
   --skip-years 2015 \
   --out-dir /path/to/output \
-  --model mlp \
+  --stage stage4 \
   --seed 42
 ```
 
 **Key Arguments:**
 
-- `--data-root`: Base root for static/data modality
-- `--gml-root`: Base root for gml/graph modality
-- `--json-root`: Base root for json/dynamic modality
-- `--train-year`: Year to use for training
-- `--test-start-year`: First year to test on
-- `--test-end-year`: Last year to test on
-- `--skip-years`: Comma-separated years to skip (e.g., "2015")
-- `--out-dir`: Output directory for results
-- `--model`: Model to use (mlp, lightgbm, xgboost)
+- `--data-root`: Base root for static/data modality (required)
+- `--gml-root`: Base root for gml/graph modality (required)
+- `--json-root`: Base root for json/dynamic modality (required)
+- `--train-year`: Year to use for training (default: 2013)
+- `--test-start-year`: First year to test on (default: 2013)
+- `--test-end-year`: Last year to test on (default: 2025)
+- `--skip-years`: Comma-separated years to skip (default: "2015")
+- `--out-dir`: Output directory for results (required)
+- `--stage`: Only `stage4` (cross-attention fusion) is supported (default: stage4)
+
+**Training Hyperparameters:**
+
+- `--epochs`: Number of training epochs (default: 30)
+- `--batch-size`: Batch size (default: 128)
+- `--hidden-dim`: Hidden dimension (default: 512)
+- `--embed-dim`: Embedding dimension (default: 256)
+- `--num-heads`: Number of attention heads (default: 4)
+- `--dropout`: Dropout rate (default: 0.2)
+- `--torch-lr`: Learning rate (default: 1e-3)
+- `--weight-decay`: Weight decay (default: 1e-4)
+- `--patience`: Early stopping patience (default: 5)
+- `--torch-device`: Device ("auto", "cpu", "cuda") (default: auto)
+
+**Cross-Validation / Evaluation:**
+
+- `--val-size`: Validation split ratio (default: 0.15)
+- `--n-folds`: Number of CV folds (default: 5)
+- `--threshold`: Classification threshold (default: 0.5)
+- `--json-var-threshold`: Variance threshold for JSON features (default: 0.001)
 
 ## Shell Scripts
 
@@ -100,6 +120,7 @@ The folder includes wrapper shell scripts for running experiments:
 - `run_data_concept_drift.sh` - Run concept drift experiments on static features
 - `run_dynamic_concept_drift.sh` - Run concept drift experiments on dynamic features
 - `run_graph_concept_drift.sh` - Run concept drift experiments on graph features
+- `multimodal_all_model.sh` - Run multimodal fusion experiments
 
 **Usage:**
 
