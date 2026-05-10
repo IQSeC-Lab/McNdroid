@@ -17,6 +17,7 @@ Concept drift occurs when the underlying data distribution changes over time, ca
 Trains and evaluates single-modality (unimodal) models for concept drift analysis.
 
 **Supported Models:**
+
 - MLP (Multi-Layer Perceptron)
 - LightGBM
 - XGBoost
@@ -25,11 +26,13 @@ Trains and evaluates single-modality (unimodal) models for concept drift analysi
 - ViT (Vision Transformer)
 
 **Supported Modalities:**
+
 - Static (data)
 - Dynamic (json)
 - Graph-based (gml)
 
 **Example Usage:**
+
 ```bash
 python unimodal_all_model.py \
   --mode static \
@@ -47,6 +50,7 @@ python unimodal_all_model.py \
 Trains and evaluates multimodal fusion models for concept drift analysis. Combines features from multiple modalities (static, dynamic, graph-based) using early or late fusion strategies.
 
 **Example Usage:**
+
 ```bash
 python multimodal_all_model.py \
   --train /path/to/data \
@@ -59,7 +63,35 @@ python multimodal_all_model.py \
 
 ### multimodal_CA.py
 
-Multimodal concept drift analysis with attention-based fusion mechanisms.
+Multimodal concept drift analysis with attention-based fusion mechanisms. Uses cross-attention to combine static features, dynamic features, and graph-based features.
+
+**Example Usage:**
+
+```bash
+python multimodal_CA.py \
+  --data-root /path/to/data_feature/processed_data/init_2013 \
+  --gml-root /path/to/data_feature/processed_gml/init_2013 \
+  --json-root /path/to/data_feature/processed_json/init_2013 \
+  --train-year 2013 \
+  --test-start-year 2013 \
+  --test-end-year 2025 \
+  --skip-years 2015 \
+  --out-dir /path/to/output \
+  --model mlp \
+  --seed 42
+```
+
+**Key Arguments:**
+
+- `--data-root`: Base root for static/data modality
+- `--gml-root`: Base root for gml/graph modality
+- `--json-root`: Base root for json/dynamic modality
+- `--train-year`: Year to use for training
+- `--test-start-year`: First year to test on
+- `--test-end-year`: Last year to test on
+- `--skip-years`: Comma-separated years to skip (e.g., "2015")
+- `--out-dir`: Output directory for results
+- `--model`: Model to use (mlp, lightgbm, xgboost)
 
 ## Shell Scripts
 
@@ -70,6 +102,7 @@ The folder includes wrapper shell scripts for running experiments:
 - `run_graph_concept_drift.sh` - Run concept drift experiments on graph features
 
 **Usage:**
+
 ```bash
 bash run_data_concept_drift.sh 2013
 ```
@@ -90,6 +123,7 @@ This trains on year 2013 and tests on all available years.
 ## Output
 
 The scripts output performance metrics for each train-test year combination:
+
 - Accuracy
 - Precision
 - Recall
