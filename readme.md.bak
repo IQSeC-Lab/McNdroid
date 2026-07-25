@@ -1,0 +1,548 @@
+# McNdroid
+
+**A Longitudinal Multimodal Benchmark for Robust Drift Detection in Android Malware**
+
+[![Paper](https://img.shields.io/badge/arXiv-2605.06894-b31b1b.svg)](https://arxiv.org/abs/2605.06894)
+[![Dataset](https://img.shields.io/badge/Hugging%20Face-McNdroid-FFD21E)](https://huggingface.co/datasets/IQSeC-Lab/McNdroid)
+[![Zenodo](https://img.shields.io/badge/Zenodo-Dataset-1682D4)](https://zenodo.org/records/19969833)
+[![Dataset License](https://img.shields.io/badge/Dataset%20License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+McNdroid is a large-scale, longitudinal, multimodal benchmark for studying Android malware detection under temporal distribution shift. It contains **858,859 applications** spanning **2013–2025, excluding 2015**, with **1,354 malware families** and three hash-aligned feature modalities:
+
+* **Static:** DREBIN-style features extracted from Android manifests and smali code.
+* **Dynamic:** behavioral features derived from sandbox execution reports.
+* **Graph:** structural features derived from function-call graphs represented in GML.
+
+The repository provides preprocessing utilities, official temporal splits, unimodal and multimodal baselines, drift analyses, concept-drift adaptation, continual-learning experiments, missing-modality evaluation, feature-importance analysis, and cross-modal disagreement measurements.
+
+> **Dataset:** [Hugging Face](https://huggingface.co/datasets/IQSeC-Lab/McNdroid) | [Zenodo](https://zenodo.org/records/19969833)
+> **Paper:** [arXiv:2605.06894](https://arxiv.org/abs/2605.06894)
+
+---
+
+## Table of Contents
+
+* [Benchmark Overview](#benchmark-overview)
+* [Repository Structure](#repository-structure)
+* [Installation](#installation)
+* [Dataset Download](#dataset-download)
+* [Dataset Organization](#dataset-organization)
+* [Loading the Modalities](#loading-the-modalities)
+* [Quick Start](#quick-start)
+* [Experimental Workflows](#experimental-workflows)
+* [Temporal Evaluation Protocol](#temporal-evaluation-protocol)
+* [Reproducibility Notes](#reproducibility-notes)
+* [Citation](#citation)
+* [License](#license)
+* [Responsible Use](#responsible-use)
+* [Contributing and Support](#contributing-and-support)
+
+---
+
+## Benchmark Overview
+
+| Property         | Description                                                         |
+| ---------------- | ------------------------------------------------------------------- |
+| Domain           | Android malware detection                                           |
+| Samples          | 858,859 applications                                                |
+| Time span        | 2013–2025, excluding 2015                                           |
+| Malware families | 1,354                                                               |
+| Modalities       | Static, dynamic, and graph-based features                           |
+| Alignment        | Modalities are aligned by application hash and binary label         |
+| Labels           | Binary malware/benign labels and multi-vendor family verdicts       |
+| Dataset size     | Approximately 10.9 GB                                               |
+| Primary setting  | Train on historical data and evaluate on chronologically later data |
+| Dataset license  | Creative Commons Attribution 4.0 International                      |
+
+### Supported Research Tasks
+
+McNdroid supports research on:
+
+* temporal generalization and concept drift;
+* unimodal and multimodal Android malware detection;
+* early, late, and attention-based feature fusion;
+* concept-drift detection and budget-constrained adaptation;
+* domain-incremental and class-incremental continual learning;
+* cross-modal agreement and modality dissent;
+* feature-space drift, feature stability, and temporal explainability;
+* robustness to missing modalities and partial feature masking;
+* malware-family evolution, label drift, and uncertainty analysis; and
+* graph-based malware classification.
+
+---
+
+## Repository Structure
+
+| Directory                                                | Purpose                                                                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [`preprocessing/`](preprocessing/)                       | Builds static, graph, and dynamic feature representations and constructs train/test splits.          |
+| [`splits/`](splits/)                                     | Official year-specific split definitions for 2013, 2014, and 2016–2025.                              |
+| [`concept_drift/`](concept_drift/)                       | Unimodal and multimodal temporal generalization experiments.                                         |
+| [`concept-drift-adaptation/`](concept-drift-adaptation/) | Month-wise CADE and hierarchical contrastive-learning adaptation experiments under labeling budgets. |
+| [`continual-learning/`](continual-learning/)             | Domain-incremental and class-incremental continual-learning experiments.                             |
+| [`distribution-shift/`](distribution-shift/)             | Statistical distribution-shift measurement using two-sample Kolmogorov–Smirnov tests.                |
+| [`feature-importance/`](feature-importance/)             | SHAP-based temporal feature and feature-group importance analysis.                                   |
+| [`feature-space-aio-umap/`](feature-space-aio-umap/)     | UMAP-based visualization of feature-space drift.                                                     |
+| [`feature-stability/`](feature-stability/)               | Temporal feature divergence and malware-family stability analysis.                                   |
+| [`missing-feature/`](missing-feature/)                   | Robustness evaluation under missing modalities and random feature masking.                           |
+| [`uncertainity-label-drift/`](uncertainity-label-drift/) | Prediction-uncertainty experiments under benign-to-malware and malware-to-benign label drift.        |
+| [`x-modality-disagreement/`](x-modality-disagreement/)   | Cross-modal disagreement, prediction logging, and modality-dissenter analysis.                       |
+| [`mcn_metadata.json`](mcn_metadata.json)                 | Machine-readable Croissant dataset metadata.                                                         |
+
+Each experimental directory contains a module-specific README or executable scripts with the relevant arguments and output conventions.
+
+---
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/IQSeC-Lab/McNdroid.git
+cd McNdroid
+```
+
+### 2. Create an Isolated Python Environment
+
+Python 3.9 or later is recommended.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+```
+
+### 3. Install Common Dependencies
+
+The repository contains several independent experimental pipelines and currently does not provide a single pinned environment file. The following packages cover the common dependencies used across the modules:
+
+```bash
+python -m pip install \
+  numpy pandas scipy scikit-learn matplotlib \
+  torch torchvision \
+  xgboost lightgbm shap umap-learn
+```
+
+Some model-specific experiments may additionally require packages such as `transformers`, `timm`, or notebook utilities. Install the PyTorch build appropriate for your CUDA version when using a GPU.
+
+---
+
+## Dataset Download
+
+### Hugging Face CLI
+
+```bash
+python -m pip install -U "huggingface_hub[cli]"
+
+hf download IQSeC-Lab/McNdroid \
+  --repo-type dataset \
+  --local-dir ./McNdroid-data
+```
+
+Define a reusable data-root variable:
+
+```bash
+export MCNDROID_DATA="$PWD/McNdroid-data"
+```
+
+The complete dataset is approximately 10.9 GB. Reserve additional storage for the download cache, trained models, intermediate arrays, and experimental outputs.
+
+The same release is also available through [Zenodo](https://zenodo.org/records/19969833).
+
+---
+
+## Dataset Organization
+
+The downloaded dataset follows the structure below. The 2013 directory contains the initializer training split; later years contain temporally separated evaluation data.
+
+```text
+McNdroid-data/
+├── metadata.csv
+├── vendor_family_wide_verdict.csv
+├── data_feature/
+│   └── processed_data/
+│       └── init_2013/
+│           ├── 2013/
+│           │   ├── train_X.npz
+│           │   ├── train_meta.npz
+│           │   ├── test_X.npz
+│           │   ├── test_meta.npz
+│           │   ├── vocab.json
+│           │   ├── selector_meta.json
+│           │   └── split_meta.json
+│           ├── 2014/
+│           │   ├── test_X.npz
+│           │   └── test_meta.npz
+│           ├── 2016/
+│           ├── ...
+│           └── 2025/
+├── gml_feature/
+│   └── processed_data/
+│       └── init_2013/
+│           ├── 2013/
+│           │   ├── train_X_y.npz
+│           │   └── test_X_y.npz
+│           ├── 2014/
+│           │   └── test_X_y.npz
+│           ├── 2016/
+│           ├── ...
+│           └── 2025/
+└── json_feature/
+    └── processed_data/
+        └── init_2013/
+            ├── 2013/
+            │   └── 2013/
+            │       ├── train_X.npz
+            │       ├── train_meta.npz
+            │       ├── test_X.npz
+            │       └── test_meta.npz
+            ├── 2014/
+            ├── 2016/
+            ├── ...
+            └── 2025/
+```
+
+### Metadata Files
+
+#### `metadata.csv`
+
+Contains sample-level information such as application hashes, collection timestamps, binary labels, and source metadata.
+
+#### `vendor_family_wide_verdict.csv`
+
+Contains per-vendor malware-family verdicts. This file supports family attribution, label-noise analysis, vendor disagreement studies, and multi-label learning.
+
+### Modality Naming
+
+Different scripts use equivalent names for the same modality:
+
+| Canonical modality | Alternative names in scripts      |
+| ------------------ | --------------------------------- |
+| Static             | `static`, `data`, `data_feature`  |
+| Dynamic            | `dynamic`, `json`, `json_feature` |
+| Graph              | `graph`, `gml`, `gml_feature`     |
+| Multimodal fusion  | `all`, `fusion`, `multimodal`     |
+
+---
+
+## Loading the Modalities
+
+### Static Features
+
+Static matrices are stored as SciPy sparse matrices. Labels and hashes are stored separately.
+
+```python
+from pathlib import Path
+
+import numpy as np
+from scipy import sparse
+
+root = Path("McNdroid-data/data_feature/processed_data/init_2013/2013")
+
+X_train = sparse.load_npz(root / "train_X.npz")
+train_meta = np.load(root / "train_meta.npz", allow_pickle=True)
+
+y_train = train_meta["y"]
+train_hashes = train_meta["hash"]
+
+print(X_train.shape, y_train.shape, train_hashes.shape)
+```
+
+### Graph Features
+
+Graph representations are stored in dense NumPy archives containing `X`, `y`, and `hash` arrays.
+
+```python
+from pathlib import Path
+
+import numpy as np
+
+root = Path("McNdroid-data/gml_feature/processed_data/init_2013/2013")
+archive = np.load(root / "train_X_y.npz", allow_pickle=True)
+
+X_train = archive["X"]
+y_train = archive["y"]
+train_hashes = archive["hash"]
+
+print(X_train.shape, y_train.shape, train_hashes.shape)
+```
+
+### Dynamic Features
+
+Dynamic matrices are sparse. Their metadata archives use the key `hashes` for application hashes.
+
+```python
+from pathlib import Path
+
+import numpy as np
+from scipy import sparse
+
+root = Path("McNdroid-data/json_feature/processed_data/init_2013/2013/2013")
+
+X_train = sparse.load_npz(root / "train_X.npz")
+train_meta = np.load(root / "train_meta.npz", allow_pickle=True)
+
+y_train = train_meta["y"]
+train_hashes = train_meta["hashes"]
+
+print(X_train.shape, y_train.shape, train_hashes.shape)
+```
+
+### Multimodal Alignment
+
+Before fusion, align samples using the intersection of application hashes across all requested modalities. Do not assume that independently loaded arrays have identical row order unless the loader explicitly validates both hash order and labels.
+
+---
+
+## Quick Start
+
+The following example trains a LightGBM classifier on the 2013 static modality and evaluates it across the available temporal test years.
+
+```bash
+cd concept_drift
+
+python unimodal_all_model.py \
+  --mode static \
+  --model lightgbm \
+  --train "$MCNDROID_DATA/data_feature/processed_data/init_2013" \
+  --test "$MCNDROID_DATA/data_feature/processed_data/init_2013" \
+  --train-years 2013 \
+  --test-years 2013 2014 2016 2017 2018 2019 2020 2021 2022 2023 2024 2025 \
+  --label binary \
+  --run 1
+```
+
+The year **2015 is intentionally absent** from McNdroid and should not be inserted into the evaluation sequence.
+
+See [`concept_drift/README.md`](concept_drift/README.md) for additional models, modalities, multimodal fusion, and cross-attention experiments.
+
+---
+
+## Experimental Workflows
+
+### 1. Feature Preprocessing
+
+The [`preprocessing/`](preprocessing/) directory provides builders for:
+
+* DREBIN-style static features;
+* GML/function-call-graph features;
+* JSON-derived dynamic behavioral features; and
+* year-specific stratified train/test splits.
+
+A typical initializer/adaptation workflow fits the vocabulary and optional feature selector on 2013, then reuses the frozen transformation for subsequent years.
+
+```bash
+cd preprocessing
+python data_feature_builder.py --help
+python gml_feature_builder.py --help
+python json_feature_builder.py --help
+```
+
+### 2. Concept-Drift Evaluation
+
+The [`concept_drift/`](concept_drift/) module supports temporal evaluation with models including MLP, LightGBM, XGBoost, SVM, DetectBERT, and ViT, together with multimodal and cross-attention fusion pipelines.
+
+```bash
+cd concept_drift
+bash run_data_concept_drift.sh 2013
+```
+
+### 3. Concept-Drift Adaptation
+
+The [`concept-drift-adaptation/`](concept-drift-adaptation/) module provides a month-wise pipeline for:
+
+1. constructing monthly sample partitions;
+2. detecting drift in a learned latent space;
+3. selecting a bounded number of samples for labeling;
+4. adapting the detector; and
+5. evaluating on held-out samples from each month.
+
+It includes CADE-based adaptation and a hierarchical contrastive-learning baseline. See the module README for modality-specific commands, budgets, seeds, and output schemas.
+
+### 4. Continual Learning
+
+Domain-incremental experiments:
+
+```bash
+cd continual-learning
+bash run_exp_cl.sh
+```
+
+Class-incremental experiments:
+
+```bash
+python mcndroid_class_inc_dataset.py
+bash run_exp.sh
+```
+
+Review the data paths and configuration variables in the shell scripts before execution.
+
+### 5. Statistical Distribution Shift
+
+```bash
+cd distribution-shift
+
+python ks-test.py \
+  --data-root "$MCNDROID_DATA/data_feature/processed_data/init_2013" \
+  --json-root "$MCNDROID_DATA/json_feature/processed_data/init_2013" \
+  --gml-root "$MCNDROID_DATA/gml_feature/processed_data/init_2013" \
+  --train-year 2013 \
+  --test-start-year 2013 \
+  --test-end-year 2025 \
+  --skip-years 2015 \
+  --out-dir ./output
+```
+
+This module computes per-feature two-sample Kolmogorov–Smirnov statistics and aggregates them by year and modality.
+
+### 6. Feature-Space Drift Visualization
+
+```bash
+cd feature-space-aio-umap
+bash feature_drift_umap.sh
+```
+
+The script generates UMAP visualizations for static, dynamic, and graph feature spaces.
+
+### 7. Feature Stability and Family Evolution
+
+```bash
+cd feature-stability
+
+python feature-stability.py \
+  --data-root "$MCNDROID_DATA/data_feature/processed_data/init_2013" \
+  --json-root "$MCNDROID_DATA/json_feature/processed_data/init_2013" \
+  --gml-root "$MCNDROID_DATA/gml_feature/processed_data/init_2013" \
+  --out-dir ./output \
+  --metric jeffreys \
+  --class-filter malware \
+  --preprocess zscore
+```
+
+The module supports Jeffreys, Jensen–Shannon, and KL divergence, together with malware-family stability analysis.
+
+### 8. Feature Importance
+
+```bash
+cd feature-importance
+
+python shap-feature-group-mean-std.py \
+  --data-root "$MCNDROID_DATA/data_feature/processed_data" \
+  --gml-root "$MCNDROID_DATA/gml_feature/processed_data" \
+  --json-root "$MCNDROID_DATA/json_feature/processed_data" \
+  --out-dir ./output
+```
+
+This pipeline uses XGBoost and SHAP to estimate temporal feature and feature-group importance across IID, near-term, and far-term evaluation regimes.
+
+### 9. Missing-Modality Robustness
+
+```bash
+cd missing-feature
+
+python missing_feat.py \
+  --data-root "$MCNDROID_DATA/data_feature/processed_data" \
+  --gml-root "$MCNDROID_DATA/gml_feature/processed_data" \
+  --json-root "$MCNDROID_DATA/json_feature/processed_data" \
+  --train-year 2013 \
+  --test-start-year 2013 \
+  --test-end-year 2025 \
+  --skip-years 2015 \
+  --random-mask-rates 0.25,0.5,0.75 \
+  --out-dir ./output
+```
+
+The module evaluates complete modality removal, removal of modality pairs, and random feature masking within individual modalities.
+
+### 10. Cross-Modal Disagreement
+
+The [`x-modality-disagreement/`](x-modality-disagreement/) workflow trains modality-specific classifiers, stores per-sample prediction logs, computes disagreement statistics, and identifies the dissenting modality for each sample.
+
+```bash
+cd x-modality-disagreement
+python modal_disagreement_single.py
+python disagreement_metrics.py
+python modality_dissenter.py
+python aggregate_seeds.py
+```
+
+### 11. Label-Drift Uncertainty
+
+The [`uncertainity-label-drift/`](uncertainity-label-drift/) module studies predictive uncertainty for samples whose labels change from benign to malware or malware to benign.
+
+```bash
+cd uncertainity-label-drift
+python merge_drift_data.py --help
+python drift_pipeline_b2m.py --help
+python run_drift_experiment.py
+```
+
+---
+
+## Temporal Evaluation Protocol
+
+McNdroid is designed for chronological rather than randomly mixed evaluation.
+
+1. **Initializer year:** fit the feature vocabulary, preprocessing transformations, and detector using historical data, commonly 2013.
+2. **Temporal testing:** evaluate on 2013, 2014, and 2016–2025 while preserving sample chronology.
+3. **No 2015 substitution:** 2015 is not included in the release.
+4. **Frozen transformations:** when evaluating future years, reuse the vocabulary and feature-selection state fitted on the initializer year unless the experiment explicitly studies adaptation.
+5. **Hash-safe fusion:** align modalities using application hashes and verify label consistency before concatenation or fusion.
+6. **Official splits:** use the JSON definitions in [`splits/`](splits/) when reproducing the benchmark partitions.
+
+Randomly pooling future samples into the training set changes the research question and may introduce temporal leakage.
+
+---
+
+## Reproducibility Notes
+
+* Record the exact initializer year, test years, skipped years, modality, model, seed, and classification threshold.
+* Use multiple independent seeds and report mean and standard deviation when the pipeline is stochastic.
+* Fit variance thresholds, vocabularies, normalizers, dimensionality reducers, and feature selectors only on the permitted training data.
+* Keep application hashes with predictions to support cross-modal alignment and per-sample auditing.
+* Report year-specific results rather than only a global average; aggregation can conceal temporal degradation.
+* Distinguish IID or near-year evaluation from long-horizon temporal evaluation.
+* Preserve the directory-specific output files because several analysis modules consume predictions or summaries generated by earlier stages.
+
+---
+
+## Citation
+
+If you use McNdroid, cite the accompanying paper:
+
+```bibtex
+@article{kamol2026mcndroid,
+  title   = {McNdroid: A Longitudinal Multimodal Benchmark for Robust Drift Detection in Android Malware},
+  author  = {Kamol, Md Mahmuduzzaman and Lopez, Jesus and Nowmi, Saeefa Rubaiyet and Rivas, Emilia and Haque, Md Ahsanul and Raff, Edward and Piplai, Aritran and Rahman, Mohammad Saidur},
+  journal = {arXiv preprint arXiv:2605.06894},
+  year    = {2026}
+}
+```
+
+---
+
+## License
+
+The McNdroid dataset metadata declares the dataset under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
+
+A separate top-level license for the source code is not currently declared in this repository. Users should verify the applicable terms before redistributing or integrating the code into other projects.
+
+---
+
+## Responsible Use
+
+McNdroid is intended for defensive cybersecurity research, reproducible benchmarking, and analysis of machine-learning behavior under non-stationary distributions. It is not a deployment-ready malware detector and should not be used as the sole basis for operational blocking, application takedown, legal attribution, or commercial threat-intelligence claims.
+
+Labels and malware-family verdicts may inherit disagreement, naming inconsistency, and temporal changes from antivirus vendors. Results should therefore be interpreted within the benchmark’s temporal splits, released modalities, and documented limitations.
+
+---
+
+## Contributing and Support
+
+Contributions that improve reproducibility, documentation, portability, or experimental coverage are welcome.
+
+* Open an [issue](https://github.com/IQSeC-Lab/McNdroid/issues) for bugs, missing instructions, or data-loading problems.
+* Use a pull request for code or documentation changes.
+* Include the affected module, command, environment, data path convention, and complete error message when reporting a problem.
+
+For dataset-specific questions, use the GitHub issue tracker or the community discussion page associated with the Hugging Face dataset.
