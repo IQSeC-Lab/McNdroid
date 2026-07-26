@@ -1,71 +1,82 @@
-# McNdroid: A Longitudinal Multimodal Benchmark for Robust Drift Detection in Android Malware
+## Dataset Distribution and Structure
 
-## Dataset
+### Zenodo Download Files
 
-[Zenodo Link](https://zenodo.org/records/19867422?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjZmYWE1MjEyLWRiM2ItNGFhMC05YWVkLTBhM2IzY2YwMTIxYSIsImRhdGEiOnt9LCJyYW5kb20iOiIyNTVhZDIzYWVlYTE2ZDEwZGJjYjVkOTRlODI5YjgwOCJ9.VpaKE5oWc1jV0B84i5wry8QtLoQjii09FD5mi66DaKi5PKCfBmlQkR4neceo_RNQyFcBDHtz_onChFoSyCrwRg)
+To accommodate Zenodo's file-count constraints, the three modalities are
+distributed as separate compressed archives rather than as individual files.
+The Zenodo record contains:
 
-## Dataset Description
-
-McNdroid is a large-scale, longitudinal, multimodal Android malware detection dataset designed to benchmark concept drift robustness. It spans samples collected from 2013 to 2025 and provides three complementary modalities: static feature, API call graphs, and dynamic behavioral representations. The dataset also includes a rich metadata CSV and per-vendor family-level verdicts, supporting fine-grained label analysis and multi-label learning.
-
-### Dataset Summary
-
-- **Modalities:** Static features (DREBIN), API call graphs, dynamic behavioral features
-- **Time span:** 2013–2025
-- **Total size:** ~10.9 GB
-- **Splits:** Train/test per year with temporal evaluation protocols
-- **Labels:** Binary (malware/benign) and multi-vendor family-level verdicts
-
-
-### Supported Tasks
-
-- Android malware detection (binary classification)
-- Concept drift detection and temporal robustness evaluation
-- Multi-modal learning for malware analysis
-- Graph-based malware classification
-
-
-## Dataset Structure
-
-### Repository Layout
-
+```text
+mcn_data.zip
+mcn_gml.zip
+mcn_json.zip
+metadata.csv
+vendor_family_wide_verdict.csv
 ```
+
+The archives correspond to the following dataset components:
+
+| Download file | Extracted directory | Content |
+|---|---|---|
+| `mcn_data.zip` | `data_feature/` | Static DREBIN feature matrices and associated metadata |
+| `mcn_gml.zip` | `gml_feature/` | API call graphs in GML format |
+| `mcn_json.zip` | `json_feature/` | Dynamic behavioral reports in JSON format |
+| `metadata.csv` | — | Dataset-level sample metadata |
+| `vendor_family_wide_verdict.csv` | — | Per-vendor malware-family verdicts |
+
+The ZIP files are packaging artifacts used for dataset distribution. The
+directory tree below describes the dataset after the archives have been
+extracted.
+
+### Extraction
+
+Download all five files into the same directory and extract the three
+archives:
+
+```bash
+unzip mcn_data.zip
+unzip mcn_gml.zip
+unzip mcn_json.zip
+```
+
+### Extracted Dataset Layout
+
+After extraction, the dataset has the following logical structure:
+
+```text
 McNdroid/
-├── README.md
-├── metadata.csv                         
-├── vendor_family_wide_verdict.csv       
-├── data_feature/                       
+├── metadata.csv
+├── vendor_family_wide_verdict.csv
+├── data_feature/
 │   └── processed_data/
 │       └── init_2013/
 │           ├── 2013/
-│           │   ├── train_X.npz          
-│           │   ├── test_X.npz           
-│           │   ├── train_meta.npz       
-│           │   ├── test_meta.npz        
-│           │   ├── vocab.json           
-│           │   ├── selector_meta.json 
-│           │   └── split_meta.json      
+│           │   ├── train_X.npz
+│           │   ├── test_X.npz
+│           │   ├── train_meta.npz
+│           │   ├── test_meta.npz
+│           │   ├── vocab.json
+│           │   ├── selector_meta.json
+│           │   └── split_meta.json
 │           ├── 2014/
+│           │   ├── train_X.npz
+│           │   ├── test_X.npz
+│           │   ├── train_meta.npz
+│           │   ├── test_meta.npz
+│           │   └── split_meta.json
 │           ├── ...
 │           └── 2025/
-├── gml_feature/                       
+├── gml_feature/
 │   └── processed_data/
 │       └── ...
-├── json_feature/                      
-│   └── processed_data/
-│       └── ...
+└── json_feature/
+    └── processed_data/
+        └── ...
 ```
 
-### Data Fields
-
-#### metadata.csv
-
-Contains per-sample metadata including SHA256 hashes, collection timestamps, labels, and source information.
-
-#### vendor_family_wide_verdict.csv
-
-Contains malware family labels from multiple antivirus vendors, enabling multi-label and label-noise research.
-
-### Annotations
-
-Labels are derived from VirusTotal multi-scanner verdicts. The `vendor_family_wide_verdict.csv` file preserves per-vendor family attributions to support research on label noise and disagreement.
+The `init_2013` directory indicates that the static feature vocabulary and
+feature-selection configuration were constructed from the initial 2013
+training partition and reused for subsequent years. Accordingly,
+`vocab.json` and `selector_meta.json` are stored in the `2013/` directory,
+whereas each yearly directory contains its corresponding feature matrices,
+sample metadata, and split metadata.
