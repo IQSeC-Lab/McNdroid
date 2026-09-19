@@ -35,15 +35,14 @@
     "prov": "http://www.w3.org/ns/prov#"
   },
   "@type": "sc:Dataset",
-  "name": "McNdroid",
-  "alternateName": "McNdroid: A Longitudinal Multimodal Benchmark for Robust Drift Detection in Android Malware",
-  "description": "McNdroid is a large-scale, longitudinal, multimodal Android malware detection dataset designed for concept-drift evaluation. It spans samples collected from 2013 to 2025 and provides three aligned modalities: static feature vectors, API call graph/GML features, and JSON-derived behavioral features. Rows across modalities are aligned by sample hash and binary label; the associated loader validates that data, GML, and JSON rows have identical hash order and identical labels before training.",
+  "name": "Anonymous Dataset",
+  "alternateName": "Anonymous Longitudinal Multimodal Android Malware Benchmark",
+  "description": "The dataset is a large-scale, longitudinal, multimodal Android malware detection dataset designed for concept-drift evaluation. It spans samples collected from 2013 to 2025 and provides three aligned modalities: static feature vectors, API call graph/GML features, and JSON-derived behavioral features. Rows across modalities are aligned by sample hash and binary label; the associated loader validates that data, GML, and JSON rows have identical hash order and identical labels before training.",
   "conformsTo": "http://mlcommons.org/croissant/1.0",
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "url": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid",
-  "datePublished": "2026-04-30",
+  "url": "https://anonymous.invalid/dataset",
   "version": "1.0.0",
-  "citeAs": "[More Information Needed]",
+  "citeAs": "Citation withheld for double-blind review.",
   "creator": [
     {
       "@type": "sc:Organization",
@@ -75,18 +74,16 @@
       "@id": "metadata-csv",
       "name": "metadata.csv",
       "description": "Sample-level metadata including SHA256 hashes, collection timestamps, labels, and source information.",
-      "contentUrl": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid/resolve/main/metadata.csv",
-      "encodingFormat": "text/csv",
-      "sha256": "531ceabe9e5fa484de0e188580d049b0b598a5333f19b4abe62e242e9a2c9c8f"
+      "contentUrl": "https://anonymous.invalid/dataset/metadata.csv",
+      "encodingFormat": "text/csv"
     },
     {
       "@type": "cr:FileObject",
       "@id": "vendor-family-wide-verdict-csv",
       "name": "vendor_family_wide_verdict.csv",
       "description": "Multi-vendor malware family verdicts for label-noise, family attribution, and multi-label learning research.",
-      "contentUrl": "https://huggingface.co/datasets/IQSeC-Lab/McNdroid/resolve/main/vendor_family_wide_verdict.csv",
-      "encodingFormat": "text/csv",
-      "sha256": "988e993101f9b6537551405361991a3d25c4554cb9ada52408ca21e404d8a4f7"
+      "contentUrl": "https://anonymous.invalid/dataset/vendor_family_wide_verdict.csv",
+      "encodingFormat": "text/csv"
     },
     {
       "@type": "cr:FileSet",
@@ -645,10 +642,10 @@
       ]
     }
   ],
-  "rai:dataLimitations": "McNdroid is intended as a research benchmark for longitudinal Android malware detection, multimodal learning, and concept-drift evaluation; it is not a deployment-ready malware detection system and should not be used as the sole basis for operational security decisions, automated app takedown, or attribution. The dataset represents Android application samples available to the creators and their collection pipeline from 2013 to 2025, so it may not cover all malware families, benign app categories, regional app markets, packer or obfuscation techniques, or post-2025 threats. Labels and family information may inherit noise, inconsistency, or temporal drift from vendor verdicts. The available modalities are limited to static feature vectors, graph-based API call representations, and dynamic behavioral features; dynamic runtime behavior, network traces, user interaction traces, and device-specific effects are not comprehensively represented. Benchmark results obtained on McNdroid should therefore be interpreted as evidence of robustness under the dataset’s specified temporal splits and modalities, rather than as proof of real-world detection performance across all Android ecosystems.",
+  "rai:dataLimitations": "the dataset is intended as a research benchmark for longitudinal Android malware detection, multimodal learning, and concept-drift evaluation; it is not a deployment-ready malware detection system and should not be used as the sole basis for operational security decisions, automated app takedown, or attribution. The dataset represents Android application samples available to the creators and their collection pipeline from 2013 to 2025, so it may not cover all malware families, benign app categories, regional app markets, packer or obfuscation techniques, or post-2025 threats. Labels and family information may inherit noise, inconsistency, or temporal drift from vendor verdicts. The available modalities are limited to static feature vectors, graph-based API call representations, and dynamic behavioral features; dynamic runtime behavior, network traces, user interaction traces, and device-specific effects are not comprehensively represented. Benchmark results obtained on the dataset should therefore be interpreted as evidence of robustness under the dataset’s specified temporal splits and modalities, rather than as proof of real-world detection performance across all Android ecosystems.",
   "rai:dataBiases": "The dataset may contain temporal biases. Because samples span 2013 to 2025, older years may overrepresent historical malware behaviors, APIs, packaging conventions, and benign app ecosystems, while newer threats or apps distributed outside the collection sources may be underrepresented. Vendor-family verdicts can introduce label bias because anti-malware vendors may disagree, update signatures over time, use different naming conventions, or detect some malware families more reliably than others.",
   "rai:personalSensitiveInformation": "The released metadata and features are not intended to contain direct personally identifiable information, such as names, emails, phone numbers, government identifiers, faces, or user account data. They include application hashes, timestamps, labels, source information, vendor/family verdicts, and extracted Android features, which are security-research metadata rather than human-subject attributes. No sensitive human attributes are intentionally included.",
-  "rai:dataUseCases": "McNdroid is designed for longitudinal Android malware detection research under temporal concept drift using aligned multimodal features. Intended use cases include benchmarking year-based malware classification, evaluating drift robustness from 2013 to 2025, studying multimodal fusion across static, graph-based, and dynamic features, and testing continual learning, concept drift adaptation, drift-detection, label-noise, or family-attribution methods. Rows across modalities are aligned by sample hash and binary label, with the loader validating identical hash order and labels before training. The dataset is not validated for production malware blocking, legal attribution, commercial threat-intelligence claims, non-Android malware detection, privacy profiling, or demographic fairness analysis.",
+  "rai:dataUseCases": "the dataset is designed for longitudinal Android malware detection research under temporal concept drift using aligned multimodal features. Intended use cases include benchmarking year-based malware classification, evaluating drift robustness from 2013 to 2025, studying multimodal fusion across static, graph-based, and dynamic features, and testing continual learning, concept drift adaptation, drift-detection, label-noise, or family-attribution methods. Rows across modalities are aligned by sample hash and binary label, with the loader validating identical hash order and labels before training. The dataset is not validated for production malware blocking, legal attribution, commercial threat-intelligence claims, non-Android malware detection, privacy profiling, or demographic fairness analysis.",
   "rai:dataSocialImpact": "The dataset can benefit cybersecurity research by enabling reproducible evaluation of Android malware detectors under temporal drift, supporting more robust and transparent defenses against evolving mobile threats. It can also help researchers compare multimodal and continual-learning methods under a common benchmark. Potential negative impacts include overclaiming operational readiness from benchmark performance, reinforcing vendor-label errors, misclassifying benign or grayware applications, or using family labels for unsupported attribution. There is also dual-use risk: malware feature datasets can inform both defensive research and adversarial adaptation by revealing which feature representations s study. Mitigations include documenting limitations and intended use, requiring users to treat the dataset as a research benchmark rather than a deployment authority, avoiding release of direct user data, and encouraging independent validation on additional contemporary and operational datasets before any real-world security use.",
   "rai:hasSyntheticData": false,
   "prov:wasGeneratedBy": [
