@@ -9,6 +9,7 @@ Directory structure:
   prediction_logs/seed_<seed>/<modality>_predictions_<year>.csv
 """
  
+import os
 import numpy as np
 import pandas as pd
 import xgboost as xgb
@@ -18,7 +19,7 @@ from pathlib import Path
 # ─────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────
-BASE = Path("/home/erivas6/2026NeurIPS/dataset")
+BASE = Path(os.environ.get("MCNDROID_DATASET_ROOT", "./dataset"))
  
 SEEDS = [42, 0, 1]#number of runs defined here
  

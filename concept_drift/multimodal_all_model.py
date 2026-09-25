@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 from dataclasses import dataclass
 from pathlib import Path
@@ -843,12 +844,13 @@ def run_single_experiment(
 
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="Multimodal Stage 1-3 fusion with XGBoost, LightGBM, SVM, MLP, DetectBERT-like, and ViT-like models")
+    dataset_root = Path(os.environ.get("MCNDROID_DATASET_ROOT", "."))
 
-    ap.add_argument("--data-root", type=Path,default="/home/shared-datasets/McNdroid/data_feature/processed_data/",
+    ap.add_argument("--data-root", type=Path, default=dataset_root / "data_feature" / "processed_data",
                     help="Base root for data modality")
-    ap.add_argument("--gml-root", type=Path, default="/home/shared-datasets/McNdroid/gml_feature/processed_data/",
+    ap.add_argument("--gml-root", type=Path, default=dataset_root / "gml_feature" / "processed_data",
                    help="Base root for gml modality")
-    ap.add_argument("--json-root", type=Path, default="/home/shared-datasets/McNdroid/json_feature/processed_data/",
+    ap.add_argument("--json-root", type=Path, default=dataset_root / "json_feature" / "processed_data",
                    help="Base root for json modality")
     ap.add_argument("--train-year", type=int, default=2013, help="Fixed train year")
     ap.add_argument("--test-start-year", type=int, default=2013, help="First test year")

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -1529,15 +1530,21 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
 
-    ap.add_argument("--data-root", type=Path, default='/home/shared-datasets/McNdroid/data_feature/processed_data')
-    ap.add_argument("--gml-root", type=Path, default='/home/shared-datasets/McNdroid/gml_feature/processed_data')
-    ap.add_argument("--json-root", type=Path, default='/home/shared-datasets/McNdroid/json_feature/processed_data')
-    ap.add_argument("--out-dir", type=Path, default='/home/shared-datasets/McNdroid/shap_output')
+    dataset_root = Path(os.environ.get("MCNDROID_DATASET_ROOT", "."))
+    data_root_default = dataset_root / "data_feature" / "processed_data"
+    gml_root_default = dataset_root / "gml_feature" / "processed_data"
+    json_root_default = dataset_root / "json_feature" / "processed_data"
+    out_dir_default = Path(os.environ.get("MCNDROID_SHAP_OUTPUT_DIR", "./shap_output"))
 
-    ap.add_argument("--data-vocab-json", type=Path, default='/home/shared-datasets/McNdroid/data_feature/processed_data/init_2013/2013/vocab.json')
-    ap.add_argument("--data-selector-json", type=Path, default='/home/shared-datasets/McNdroid/data_feature/processed_data/init_2013/2013/selector_meta.json')
-    ap.add_argument("--gml-vocab-txt", type=Path, default='/home/shared-datasets/McNdroid/gml_feature/processed_data/init_2013/2013/vocabulary.txt')
-    ap.add_argument("--json-feature-names-json", type=Path, default='/home/shared-datasets/McNdroid/json_feature/processed_data/init_2013/2013/feature_space/feature_names.json')
+    ap.add_argument("--data-root", type=Path, default=data_root_default)
+    ap.add_argument("--gml-root", type=Path, default=gml_root_default)
+    ap.add_argument("--json-root", type=Path, default=json_root_default)
+    ap.add_argument("--out-dir", type=Path, default=out_dir_default)
+
+    ap.add_argument("--data-vocab-json", type=Path, default=data_root_default / "init_2013" / "2013" / "vocab.json")
+    ap.add_argument("--data-selector-json", type=Path, default=data_root_default / "init_2013" / "2013" / "selector_meta.json")
+    ap.add_argument("--gml-vocab-txt", type=Path, default=gml_root_default / "init_2013" / "2013" / "vocabulary.txt")
+    ap.add_argument("--json-feature-names-json", type=Path, default=json_root_default / "init_2013" / "2013" / "feature_space" / "feature_names.json")
 
     ap.add_argument("--n-estimators", type=int, default=3000)
     ap.add_argument("--seed", type=int, default=42)
