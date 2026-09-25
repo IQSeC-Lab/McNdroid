@@ -28,8 +28,10 @@ if [[ "$FOUND" -eq 0 ]]; then
   exit 1
 fi
 
-SCRIPT="/home/shared-datasets/McNdroid/unimodal_all_model.py"
-BASE_DATA_DIR="/home/shared-datasets/McNdroid/json_feature/processed_data"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="${MCNDROID_PROJECT_ROOT:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
+SCRIPT="${MCNDROID_UNIMODAL_SCRIPT:-${PROJECT_ROOT}/concept_drift/unimodal_all_model.py}"
+BASE_DATA_DIR="${MCNDROID_JSON_ROOT:-${PROJECT_ROOT}/json_feature/processed_data}"
 DATA_DIR="${BASE_DATA_DIR}/init_${TRAIN_YEAR}"
 
 if [[ ! -d "$DATA_DIR" ]]; then

@@ -17,7 +17,7 @@ from pathlib import Path
 # ─────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────
-BASE = Path("/home/erivas6/2026NeurIPS/dataset")
+BASE = Path(os.environ.get("MCNDROID_DATASET_ROOT", "./dataset"))
  
 TEST_YEARS = [str(y) for y in range(2014, 2026) if y != 2015]  # 2014, 2016-2025
  

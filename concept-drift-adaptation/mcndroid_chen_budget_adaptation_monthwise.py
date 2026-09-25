@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import random
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -24,12 +25,13 @@ from torch.utils.data import DataLoader, TensorDataset
 # PATHS
 # ─────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
+CONCEPT_DRIFT_ROOT = Path(os.environ.get("MCNDROID_CONCEPT_DRIFT_ROOT", SCRIPT_DIR))
 
-BASE_STATIC  = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "data-features" / "init_2013"
-BASE_GRAPH   = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "gml-features" / "init_2013"
-BASE_DYNAMIC = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "json-features" / "init_2013"
+BASE_STATIC  = CONCEPT_DRIFT_ROOT / "data-features" / "init_2013"
+BASE_GRAPH   = CONCEPT_DRIFT_ROOT / "gml-features" / "init_2013"
+BASE_DYNAMIC = CONCEPT_DRIFT_ROOT / "json-features" / "init_2013"
 
-MONTHWISE_ROOT    = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "data"
+MONTHWISE_ROOT    = CONCEPT_DRIFT_ROOT / "data"
 MONTHWISE_CSV     = MONTHWISE_ROOT / "monthwise_csv"
 MONTHWISE_LOGS    = SCRIPT_DIR / "logs"
 MONTHWISE_RESULTS = SCRIPT_DIR / "results"

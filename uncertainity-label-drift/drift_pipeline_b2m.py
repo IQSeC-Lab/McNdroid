@@ -13,7 +13,7 @@ Usage:
         --drift_data_root ./drift_data \
         --b2m ./label-drift/benign_to_malware.csv \
         --m2b ./label-drift/malware_to_benign.csv \
-        --output_dir /home/erivas6/2026NeurIPS/drifted_results
+        --output_dir ./drifted_results
 
 Arguments:
     --drift_data_root   Root of merged drift_data/ directory (default: ./drift_data)
@@ -28,6 +28,7 @@ Arguments:
 
 import argparse
 import io
+import os
 import re
 import sys
 import warnings
@@ -392,8 +393,11 @@ def main():
     parser.add_argument("--drift_data_root",  type=Path, default=Path("./drift_data"))
     parser.add_argument("--b2m",              type=Path, default=Path("./benign_to_malware.csv"))
     parser.add_argument("--m2b",              type=Path, default=Path("./malware_to_benign.csv"))
-    parser.add_argument("--output_dir",       type=Path,
-                        default=Path("/home/erivas6/2026NeurIPS/drifted_results"))
+    parser.add_argument(
+        "--output_dir",
+        type=Path,
+        default=Path(os.environ.get("MCNDROID_DRIFT_OUTPUT_DIR", "./drifted_results")),
+    )
     parser.add_argument("--warmstart_rounds", type=int,  default=50)
     parser.add_argument("--seed",             type=int,  default=42)
     parser.add_argument("--years",            type=int,  nargs="+", default=DEFAULT_YEARS)
