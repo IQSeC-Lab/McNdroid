@@ -5,9 +5,9 @@
 ```bash
 python data_feature_builder.py \
   --mode initializer \
-  --data-root /scratch/mkamol/mcndroid/all_data/ \
+  --data-root /scratch//mcndroid/all_data/ \
   --year 2013 \
-  --output-dir /scratch/mkamol/datasets/processed_data/2013 \
+  --output-dir /scratch//datasets/processed_data/2013 \
   --test-size 0.2 \
   --seed 42 \
   --stratify
@@ -26,9 +26,9 @@ python data_feature_builder.py \
 ```bash
 python data_feature_builder.py \
   --mode initializer \
-  --data-root /scratch/mkamol/mcndroid/all_data/ \
+  --data-root /scratch//mcndroid/all_data/ \
   --year 2013 \
-  --output-dir /scratch/mkamol/datasets/processed_data/2013 \
+  --output-dir /scratch//datasets/processed_data/2013 \
   --test-size 0.2 \
   --seed 42 \
   --stratify \
@@ -85,14 +85,14 @@ python data_feature_builder.py \
 ```bash
 python gml_feature_builder.py initializer \
   --year 2013 \
-  --out-dir /scratch/mkamol/datasets/init_2013 \
+  --out-dir /scratch//datasets/init_2013 \
   --workers 16
 ```
 ```bash
 python gml_feature_builder.py adaptation \
   --year 2014 \
-  --init-dir /scratch/mkamol/datasets/init_2013 \
-  --out-dir /scratch/mkamol/datasets/adapt_2014_from_2013 \
+  --init-dir /scratch//datasets/init_2013 \
+  --out-dir /scratch//datasets/adapt_2014_from_2013 \
   --workers 16
 ```
 ---
