@@ -83,11 +83,3 @@ training partition and reused for subsequent years. Accordingly,
 `vocab.json` and `selector_meta.json` are stored in the `2013/` directory,
 whereas each yearly directory contains its corresponding feature matrices,
 sample metadata, and split metadata.
-
-### Privacy/Anonymity Audit Check
-
-Run the lightweight audit script before sharing changes:
-
-```bash
-bash ./anonymity_audit.sh
-```
