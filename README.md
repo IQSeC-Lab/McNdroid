@@ -4,6 +4,8 @@
 
 To accommodate Zenodo's file-count constraints, the three modalities are
 distributed as separate compressed archives rather than as individual files.
+[Download from here]([https://markdownlivepreview.com/](https://zenodo.org/records/19969833)).
+
 The Zenodo record contains:
 
 ```text
