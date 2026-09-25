@@ -25,11 +25,11 @@ from torch.utils.data import DataLoader, TensorDataset
 # ─────────────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-BASE_STATIC  = Path("/work/msrahman3/Nowmi/Mcndroid/concept_drift_adaptation_monthwise") / "data-features" / "init_2013"
-BASE_GRAPH   = Path("/work/msrahman3/Nowmi/Mcndroid/concept_drift_adaptation_monthwise") / "gml-features" / "init_2013"
-BASE_DYNAMIC = Path("/work/msrahman3/Nowmi/Mcndroid/concept_drift_adaptation_monthwise") / "json-features" / "init_2013"
+BASE_STATIC  = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "data-features" / "init_2013"
+BASE_GRAPH   = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "gml-features" / "init_2013"
+BASE_DYNAMIC = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "json-features" / "init_2013"
 
-MONTHWISE_ROOT    = Path("/work/msrahman3/Nowmi/Mcndroid/concept_drift_adaptation_monthwise") / "data"
+MONTHWISE_ROOT    = Path("/Mcndroid/concept_drift_adaptation_monthwise") / "data"
 MONTHWISE_CSV     = MONTHWISE_ROOT / "monthwise_csv"
 MONTHWISE_LOGS    = SCRIPT_DIR / "logs"
 MONTHWISE_RESULTS = SCRIPT_DIR / "results"
