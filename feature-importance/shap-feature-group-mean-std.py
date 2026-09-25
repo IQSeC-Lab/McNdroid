@@ -293,7 +293,7 @@ def apply_variance_threshold_train_test(
 
 
 def make_xgb_classifier(args: argparse.Namespace) -> XGBClassifier:
-    """Fixed model requested by user."""
+    """xgb LAMDA"""
     return XGBClassifier(
         n_estimators=args.n_estimators,
         max_depth=12,
