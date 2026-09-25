@@ -437,7 +437,7 @@ def build_parser():
         "--jsonl-root",
         type=Path,
         default=DEFAULT_JSONL_ROOT,
-        help="Root JSONL directory, default=/scratch/mkamol/jsonl_gml_reports",
+        help="Root JSONL directory, default=/scratch/m/jsonl_gml_reports",
     )
     p_init.add_argument("--out-dir", required=True, help="Output directory for initializer artifacts")
     p_init.add_argument("--test-size", type=float, default=0.2, help="Test fraction, default=0.2")
@@ -457,7 +457,7 @@ def build_parser():
         "--jsonl-root",
         type=Path,
         default=DEFAULT_JSONL_ROOT,
-        help="Root JSONL directory, default=/scratch/mkamol/jsonl_gml_reports",
+        help="Root JSONL directory, default=/scratch/m/jsonl_gml_reports",
     )
     p_adapt.add_argument("--init-dir", required=True, help="Initializer output directory containing vocabulary.txt")
     p_adapt.add_argument("--out-dir", required=True, help="Output directory for adapted dataset")
